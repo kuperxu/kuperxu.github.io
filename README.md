@@ -1,202 +1,94 @@
-![jane-preview](https://raw.githubusercontent.com/xianmin/hugo-theme-jane/master/images/preview.png)
-[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors)
+# Jekyll Resume Theme
 
-## hugo-theme-jane
+Live demo at https://jekyll-theme-minimal-resume.netlify.com/
 
-Jane is a readable theme for Hugo. It's a fork of the [hugo-theme-even](https://github.com/olOwOlo/hugo-theme-even) and made a lot of changes.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/24d80ae8-c3d9-4645-a6d8-9e97fc8dec3c/deploy-status)](https://app.netlify.com/sites/jekyll-theme-minimal-resume/deploys)
 
-[Demo](https://xianmin.github.io/hugo-theme-jane/) | [中文说明](https://github.com/xianmin/hugo-theme-jane/blob/master/README-zh.md)
+# Stack
 
-This theme focuses on improving reading experience.
+![](https://img.shields.io/badge/jekyll-✓-blue.svg)
+![](https://img.shields.io/badge/html5-✓-blue.svg)
+![](https://img.shields.io/badge/sass-✓-blue.svg)
+![](https://img.shields.io/badge/sweet--scroll-✓-blue.svg)
+![](https://img.shields.io/badge/particle--js-✓-blue.svg)
+![](https://img.shields.io/badge/font--awesome-✓-blue.svg)
+![](https://img.shields.io/badge/devicon-✓-blue.svg)
+![](https://img.shields.io/badge/gulp-✓-blue.svg)
 
-**Other Key features:**
+***
 
-- Responsive and mobile friendly
-- Multilingual Mode support
-- Shortcodes : image, blockquote, music, etc.
-- Separate design for Tags & Categories Page
-- Social network linking
-- Better Pagination, TOC, footnote behavior
-- Use the awesome Chroma syntax highlighting
-- Custom css, Custom js, Custom head support
-- Sub menu support
-- Search Optimization
+<h3 align="center">Please help this repo with a :star: if you find it useful! :blush:</h3>
 
+***
 
-## Who use Hugo-theme-Jane
+# Screenshot
 
-- [Jack Baty's Blog](https://www.baty.net/) - Thousands of posts on the site powered by Hugo & Theme Jane.
-- [虞双齐爱折腾](https://yushuangqi.com/) - @ysqi 个人技术博客.
-- [제이든의 프로그래밍 이야기](https://jayden-lee.github.io/) - Personal Programming blog in Korean by @jayden-lee
-- **[and many more...](https://github.com/xianmin/hugo-theme-jane/blob/master/SITES.md)**
+<p align="center">
+  <img src="https://github.com/murraco/jekyll-theme-minimal-resume/blob/master/screenshot.png" width="90%" />
+</p>
 
+# Quick Setup
 
-Are you using **hugo-theme-jane**? [Add your site](https://github.com/xianmin/hugo-theme-jane/edit/master/SITES.md) to the list!
+1. Install Jekyll: `gem install jekyll bundler`
+2. For this repository and clone your fork
+3. Edit `_config.yml` to personalize your site
 
+# Settings
 
-## Quick Start
+You have to fill some informations on `_config.yml` to customize your site:
 
-**Note:**  This tutorial assumes that you use [Hugo][] for **the first time** . [Hugo][] is one of the most popular open-source static site generators. You can check the [Hugo Official Docs][] for more help.
-
-[Hugo]: https://gohugo.io/
-[Hugo Official Docs]: https://gohugo.io/getting-started/
-
-
-
-### 1. Quick Install Hugo
-
-Download the appropriate version for your platform from [Hugo Releases](https://github.com/gohugoio/hugo/releases). Once downloaded, the binary can be run from anywhere. Ideally, you should install it somewhere in your `PATH` for easy use. `/usr/local/bin` is the most probable location.
-
-
-
-### 2. Quick Create a New Site
-
-```bash
-hugo new site myBlog
+## Site settings
+```yml
+description: A blog about lorem ipsum dolor sit amet
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://localhost:3000" # the base hostname & protocol for your site
 ```
 
-The above will create a new Hugo site in a folder named `myBlog`.
-
-
-
-### 3. Quick Use Hugo-Theme-Jane
-
-Clone this repository into `themes` folder:
-
-```bash
-cd myBlog
-git clone https://github.com/xianmin/hugo-theme-jane.git --depth=1 themes/jane
+## User settings
+```yml
+username: Lorem Ipsum
+user_description: Software Engineer at Lorem Ipsum Dolor
+user_title: Mauricio Urraco
+email: mauriurraco@gmail.com
 ```
 
-Copy the example site content:
+> Don't forget to change your URL before you deploy your site!
 
-```bash
-cp -r themes/jane/exampleSite/content ./
+# Color and Particle Customization
+
+- Color Customization
+  - Edit the `.sass` variables
+- Particle Customization
+  - Edit the json data in particle function in `app.js`
+  - Refer to `Particle.js` for help
+  
+# Content
+
+You can (and should) edit the `.html` files for adding your own information, icons, working experience, social links or whatever you want to add. I.e.:
+
+```html
+<a aria-label="My Github" target="_blank" href="https://github.com/murraco">
+  <i class="icon fa fa-github-alt" aria-hidden="true"></i>
+</a>
 ```
 
-Copy the default site config:
+# Running locally
 
-```bash
-cp themes/jane/exampleSite/config.toml ./
-```
+In order to compile the assets and run `Jekyll` locally you need to follow those steps:
 
-Take a look at the example site:
+1. Install Jekyll
+2. Run `jekyll build`
+3. Start and http-server in the folder `_site`
 
-```bash
-hugo server
-```
+# Contribution
 
-Open http://localhost:1313/ , you will see the example site.
+- Report issues
+- Open pull request with improvements
+- Spread the word
+- Reach out to me directly at <mauriurraco@gmail.com>
 
+# Donate
 
+`btc: 36V7HqqENSKn6iFCBuE4iCdtB29uGoCKzN`
 
-### 4. Start Blog
-
-The default config file `config.toml` in your site root directory. Customize it.
-
-The default content files in the `./content/post` directory.
-
-
-
-### 5. Generate Your Website
-
-Run `hugo` , this generates your website to the `public/` directory by default.
-
-Nice work!
-
-If you have extra time or want to know more about [Hugo][] , check out the awosome  [Hugo Official Docs][] .
-
-
-
-## Site Configuration
-
-Take a look in the [exampleSite](https://github.com/xianmin/hugo-theme-jane/tree/master/exampleSite) folder.
-
-This directory contains an example config file and the content for the demo.
-It serves as an example setup for your documentation.
-
-Copy the `config.toml` in the root directory of your website. Overwrite the existing config file if necessary.
-
-
-
-## Single Post Configuration
-
-**Front Matter** : Hugo allows you to add front matter in yaml, toml, or json to your content files.
-
-**YAML Example:**
-
-```yaml
----
-# Common-Defined
-title: "An Example Post"
-date: 2018-01-01T16:01:23+08:00
-lastmod: 2018-01-02T16:01:23+08:00
-draft: false
-tags: ["tag-1", "tag-2", "tag-3"]
-categories: ["index"]
-author: "xianmin"
-
-# User-Defined
-# You can close(false) or open(true) something for this content.
-# P.S. comment can only be closed
-comment: false
-toc: false
-# You can also define another contentCopyright
-contentCopyright: '<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank">CC BY-NC-ND 4.0</a>'
-reward: false
-mathjax: true
----
-```
-
-
-
-## Multilingual (Language) Support
-
-Hugo-Theme-Jane supports the creation of websites with multiple languages side by side.
-
-You should define the available languages in a `languages` section in your site configuration.
-
-Translations are collected from the `i18n/` folder.
-
-To use the translations:
-
-```toml
-# use Chinese translation
-defaultContentLanguage = "zh-cn"  # Default language to use (if you setup multilingual support)
-[Languages.zh-cn]
-  languageCode = "zh-cn"
-```
-
-To use the Multilingual Mode, see [Multilingual Mode | Hugo](https://gohugo.io/content-management/multilingual/) .
-
-
-## Contributing
-
-If you are interested in fixing issues and contributing directly to this theme, please see the document [How to Contribute](https://github.com/xianmin/hugo-theme-jane/wiki/How-to-Contribute) .
-
-There are many ways to contribute to the Jane theme:
-
-- submitting pull requests
-- reporting issues
-- providing new translations
-- creating suggestions
-- Correct inappropriate English expression (ok, my English is not good)
-
-
-## Contributors
-
-Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/2177570?v=4" width="80px;"/><br /><sub><b>Chen Xianmin</b></sub>](http://www.xianmin.org)<br />[💻](https://github.com/xianmin/hugo-theme-jane/commits?author=xianmin "Code") [🎨](#design-xianmin "Design") [📖](https://github.com/xianmin/hugo-theme-jane/commits?author=xianmin "Documentation") [💬](#question-xianmin "Answering Questions") | [<img src="https://avatars3.githubusercontent.com/u/970?v=4" width="80px;"/><br /><sub><b>Jack Baty</b></sub>](https://www.baty.net)<br />[🐛](https://github.com/xianmin/hugo-theme-jane/issues?q=author%3Ajackbaty "Bug reports") [🤔](#ideas-jackbaty "Ideas, Planning, & Feedback") [⚠️](https://github.com/xianmin/hugo-theme-jane/commits?author=jackbaty "Tests") [👀](#review-jackbaty "Reviewed Pull Requests") | [<img src="https://avatars0.githubusercontent.com/u/126313?v=4" width="80px;"/><br /><sub><b>Athurg Feng</b></sub>](https://www.gooth.org)<br />[👀](#review-athurg "Reviewed Pull Requests") [⚠️](https://github.com/xianmin/hugo-theme-jane/commits?author=athurg "Tests") [🐛](https://github.com/xianmin/hugo-theme-jane/issues?q=author%3Aathurg "Bug reports") | [<img src="https://avatars1.githubusercontent.com/u/712534?v=4" width="80px;"/><br /><sub><b>Dmitry Verkhoturov</b></sub>](https://terrty.net/cv/verhoturov.pdf)<br />[👀](#review-paskal "Reviewed Pull Requests") [🌍](#translation-paskal "Translation") [🤔](#ideas-paskal "Ideas, Planning, & Feedback") | [<img src="https://avatars0.githubusercontent.com/u/1678456?v=4" width="80px;"/><br /><sub><b>Deckon</b></sub>](https://deckon-blog.netlify.com/)<br />[🌍](#translation-Deckon "Translation") | [<img src="https://avatars3.githubusercontent.com/u/2821085?v=4" width="80px;"/><br /><sub><b>YuShuangqi</b></sub>](https://yushuangqi.com)<br />[👀](#review-ysqi "Reviewed Pull Requests") [🤔](#ideas-ysqi "Ideas, Planning, & Feedback") [💻](https://github.com/xianmin/hugo-theme-jane/commits?author=ysqi "Code") | [<img src="https://avatars1.githubusercontent.com/u/88564?v=4" width="80px;"/><br /><sub><b>Josta Yee</b></sub>](https://josta.me)<br />[🤔](#ideas-jostyee "Ideas, Planning, & Feedback") [💻](https://github.com/xianmin/hugo-theme-jane/commits?author=jostyee "Code") |
-| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| [<img src="https://avatars2.githubusercontent.com/u/1475583?v=4" width="80px;"/><br /><sub><b>German Lashevich</b></sub>](https://github.com/Zebradil)<br />[💻](https://github.com/xianmin/hugo-theme-jane/commits?author=Zebradil "Code") [🤔](#ideas-Zebradil "Ideas, Planning, & Feedback") [🐛](https://github.com/xianmin/hugo-theme-jane/issues?q=author%3AZebradil "Bug reports") [⚠️](https://github.com/xianmin/hugo-theme-jane/commits?author=Zebradil "Tests") | [<img src="https://avatars0.githubusercontent.com/u/4357360?v=4" width="80px;"/><br /><sub><b>Jean-Loup Adde</b></sub>](https://juanwolf.fr)<br />[🌍](#translation-juanwolf "Translation") | [<img src="https://avatars1.githubusercontent.com/u/38299370?v=4" width="80px;"/><br /><sub><b>AxdLog</b></sub>](https://gitlab.com/MaxdSre)<br />[💻](https://github.com/xianmin/hugo-theme-jane/commits?author=MaxdSre "Code") | [<img src="https://avatars1.githubusercontent.com/u/30607?v=4" width="80px;"/><br /><sub><b>Andrea Borruso</b></sub>](https://github.com/aborruso)<br />[📖](https://github.com/xianmin/hugo-theme-jane/commits?author=aborruso "Documentation") | [<img src="https://avatars3.githubusercontent.com/u/367172?v=4" width="80px;"/><br /><sub><b>Yong-Siang Shih (Shaform)</b></sub>](https://shaform.com)<br />[💻](https://github.com/xianmin/hugo-theme-jane/commits?author=shaform "Code") [🌍](#translation-shaform "Translation") |
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
-
-
-## License
-
-Hugo-theme-jane is licensed under the MIT license. Check the [LICENSE](LICENSE.md) file for details.
+`eth: 0xB419E3E9fa2233383E0877d442e55C34B9C944dD`
