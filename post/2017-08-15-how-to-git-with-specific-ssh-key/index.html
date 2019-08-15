@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>如何使用特定的SSH Key提交GIT - 活在梦里博客</title>
-  <link rel="alternate" hreflang="en" href="https://keysaim.github.io" />
+  <link rel="alternate" hreflang="en" href="https://kuperxu.github.io" />
 
 <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
@@ -18,10 +18,10 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
 
 
-<meta name="author" content="keysaim" />
+<meta name="author" content="kuperxu" />
   <meta name="description" content="问题提出 最近在自己的MAC上面提交Github代码的时候发现居然失败了： $ git push origin master Permission denied (publickey). fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists. 这不是坑爹吗" />
 
-  <meta name="keywords" content="Hugo, blog, keysaim, 活在梦里" />
+  <meta name="keywords" content="Hugo, blog, kuperxu, 活在梦里" />
 
 
 
@@ -31,7 +31,7 @@
 <meta name="generator" content="Hugo 0.37.1" />
 
 
-<link rel="canonical" href="https://keysaim.github.io/post/2017-08-15-how-to-git-with-specific-ssh-key/" />
+<link rel="canonical" href="https://kuperxu.github.io/post/2017-08-15-how-to-git-with-specific-ssh-key/" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -52,7 +52,7 @@
 <meta property="og:title" content="如何使用特定的SSH Key提交GIT" />
 <meta property="og:description" content="问题提出 最近在自己的MAC上面提交Github代码的时候发现居然失败了： $ git push origin master Permission denied (publickey). fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists. 这不是坑爹吗" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://keysaim.github.io/post/2017-08-15-how-to-git-with-specific-ssh-key/" />
+<meta property="og:url" content="https://kuperxu.github.io/post/2017-08-15-how-to-git-with-specific-ssh-key/" />
 
 
 
@@ -101,7 +101,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="/" class="logo">keysaim</a>
+    <a href="/" class="logo">kuperxu</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -127,7 +127,7 @@
 
   <header id="header" class="header container">
     <div class="logo-wrapper">
-  <a href="/" class="logo">keysaim</a>
+  <a href="/" class="logo">kuperxu</a>
 </div>
 
 <nav class="site-navbar">
@@ -201,8 +201,8 @@ and the repository exists.
 
 <pre><code class="language-console">$ git config -l
 ...
-user.email=keysaim@gmail.com
-user.name=keysaim
+user.email=kuperxu@gmail.com
+user.name=kuperxu
 </code></pre>
 
 <p>再查看下本地的ssh key：</p>
@@ -211,7 +211,7 @@ user.name=keysaim
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu4Jy/+uFGiC89luBejzCEyPbY0SRoppyzrB4g1v3zv1OleylMzdf+eTTRcYgMbYoY6ZQs4M2NHX20iO6vf6j2uPvUsB++pP0G6Q7+VlrUlC19B07IVx7Mo2xmHCe4bMshFSugqOl+hV6zVjGpYJcLI9XtWQ6F/br4tkYD/J8KWns+SNha8gJVBckV1ncGlR+Q7ji4OM4+eIhKEEK4Wo7Cf7KaT71fIVFl7XRx5kmdtEN3F+wT4LjNb2okl8Pu4mmxCMwJvXzj0Jr9PkVzhSAhDkWG3mMt3kC5PhhRhCP7uwkGFsOEm5uGS907wTxY9cJNIl8FikOfmvDa5XrfMbMx nbaoping@xxx.com
 </code></pre>
 
-<p>发现邮件居然是<code>nbaoping@xxx.com</code>（此处已打码），显然跟本地repo的<code>keysaim@gmail.com</code>不同，<code>git</code>提交的时候没有特殊配置，会使用默认的ssh key，也就是<code>~/.ssh/id_rsa.pub</code>，而提交的用户信息跟此key并不能对应上，故此<code>github</code>拒绝了此次提交。既然如此，那把本地repo的用户信息改成key所对应的信息不就好了吗？是的，但是此信息都已经打码了就充分说明本博主是十分不愿暴露它的，咱必须得想其它辙。</p>
+<p>发现邮件居然是<code>nbaoping@xxx.com</code>（此处已打码），显然跟本地repo的<code>kuperxu@gmail.com</code>不同，<code>git</code>提交的时候没有特殊配置，会使用默认的ssh key，也就是<code>~/.ssh/id_rsa.pub</code>，而提交的用户信息跟此key并不能对应上，故此<code>github</code>拒绝了此次提交。既然如此，那把本地repo的用户信息改成key所对应的信息不就好了吗？是的，但是此信息都已经打码了就充分说明本博主是十分不愿暴露它的，咱必须得想其它辙。</p>
 
 <p>好了，现在的问题就是，如何使用特定的ssh key提交Git？本文就来讲述一种通用的解决办法。</p>
 
@@ -221,8 +221,8 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu4Jy/+uFGiC89luBejzCEyPbY0SRoppyzrB4g1v3z
 <li><p>查看repo对应的hostname</p>
 
 <pre><code class="language-console">$ git remote -v
-origin  git@github.com:keysaim/keysaim.github.io.git (fetch)
-origin  git@github.com:keysaim/keysaim.github.io.git (push)
+origin  git@github.com:kuperxu/kuperxu.github.io.git (fetch)
+origin  git@github.com:kuperxu/kuperxu.github.io.git (push)
 </code></pre>
 
 <p>其中<code>github.com</code>就是repo使用的<code>hostname</code>。</p></li>
@@ -231,21 +231,21 @@ origin  git@github.com:keysaim/keysaim.github.io.git (push)
 
 <pre><code class="language-console">$ git config -l
 ...
-user.email=keysaim@gmail.com
-user.name=keysaim
+user.email=kuperxu@gmail.com
+user.name=kuperxu
 </code></pre>
 
-<p>最关键的是邮件信息<code>keysaim@gmail.com</code>。如果没有用户信息，可以先配置：</p>
+<p>最关键的是邮件信息<code>kuperxu@gmail.com</code>。如果没有用户信息，可以先配置：</p>
 
-<pre><code class="language-console">$ git config user.email &quot;keysaim@gmail.com&quot;
-$ git config user.name &quot;keysaim&quot;
+<pre><code class="language-console">$ git config user.email &quot;kuperxu@gmail.com&quot;
+$ git config user.name &quot;kuperxu&quot;
 </code></pre>
 
 <p>注意，很多教程里面以及<code>git</code>的错误提示里面会建议在<code>git config</code>后面加入参数<code>git config --global</code>，这里，千万不要加入此参数，否则它会去尝试修改你的<code>git</code>的全局配置，也就是你所有repo默认的用户信息。你可以在文件<code>~/.git/config</code>查看你的全局配置，其中<code>[user]</code>段就是你的默认用户信息。咱们这里就是为了能够给这个repo指定特定的ssh key，显然不适合使用全局的配置。</p></li>
 
 <li><p>为repo的用户生成新的ssh key</p>
 
-<pre><code class="language-console">$ ssh-keygen -C &quot;keysaim@gmail.com&quot;
+<pre><code class="language-console">$ ssh-keygen -C &quot;kuperxu@gmail.com&quot;
 Generating public/private rsa key pair.
 Enter file in which to save the key (/Users/nbaoping/.ssh/id_rsa): id_rsa.github
 Enter passphrase (empty for no passphrase):
@@ -253,7 +253,7 @@ Enter same passphrase again:
 Your identification has been saved in id_rsa.github.
 Your public key has been saved in id_rsa.github.pub.
 The key fingerprint is:
-SHA256:G0djI0bh+XwGcwOZ0AsbQ8ffB51pYrfSlRALNZw3igc keysaim@gmail.com
+SHA256:G0djI0bh+XwGcwOZ0AsbQ8ffB51pYrfSlRALNZw3igc kuperxu@gmail.com
 The key's randomart image is:
 +---[RSA 2048]----+
 |       .==o+o=+.+|
@@ -268,7 +268,7 @@ The key's randomart image is:
 +----[SHA256]-----+
 </code></pre>
 
-<p>其中，<code>-C</code>是用来指定该key的用户信息的，这里咱们使用了<code>keysaim@gmail.com</code>。该命令是一个交互式的命令，其中大部分你都可以直接回车，但是对于第一个提示<code>Enter file in which to save the key</code>，<strong><em>请务必输入你想要的文件名，否则它将覆盖你默认的ssh key，这个可是不可逆的</em></strong>。这里使用文件名<code>id_rsa.github</code>。如果没有指定文件夹在路径中，该命令会在当前目录下生成key文件：</p>
+<p>其中，<code>-C</code>是用来指定该key的用户信息的，这里咱们使用了<code>kuperxu@gmail.com</code>。该命令是一个交互式的命令，其中大部分你都可以直接回车，但是对于第一个提示<code>Enter file in which to save the key</code>，<strong><em>请务必输入你想要的文件名，否则它将覆盖你默认的ssh key，这个可是不可逆的</em></strong>。这里使用文件名<code>id_rsa.github</code>。如果没有指定文件夹在路径中，该命令会在当前目录下生成key文件：</p>
 
 <pre><code class="language-console">$ ls id_rsa.github*
 id_rsa.github  id_rsa.github.pub
@@ -316,7 +316,7 @@ id_rsa.github  id_rsa.github.pub
 
 <li><p>将生成的ssh key加入<code>github</code></p>
 
-<p>打开<a href="https://github.com/settings/keys">github ssh key</a>配置页面，点击<code>New SSH Key</code>，给刚刚生成的key取名，如<code>keysaim-mac</code>。把<code>~/.ssh/id_rsa.github.pub</code>（请务必注意是公钥文件，千万不要搞错了）里面的内容拷贝过来，点击<code>Add SSH Key</code>按钮保持。</p></li>
+<p>打开<a href="https://github.com/settings/keys">github ssh key</a>配置页面，点击<code>New SSH Key</code>，给刚刚生成的key取名，如<code>kuperxu-mac</code>。把<code>~/.ssh/id_rsa.github.pub</code>（请务必注意是公钥文件，千万不要搞错了）里面的内容拷贝过来，点击<code>Add SSH Key</code>按钮保持。</p></li>
 
 <li><p>提交</p>
 
@@ -329,7 +329,7 @@ Compressing objects: 100% (62/62), done.
 Writing objects: 100% (63/63), 838.96 KiB | 0 bytes/s, done.
 Total 63 (delta 2), reused 0 (delta 0)
 remote: Resolving deltas: 100% (2/2), done.
-To github.com:keysaim/keysaim.github.io.git
+To github.com:kuperxu/kuperxu.github.io.git
    73a2043..88cacc1  master -&gt; master
 </code></pre>
 
@@ -396,7 +396,7 @@ To github.com:keysaim/keysaim.github.io.git
     title: '如何使用特定的SSH Key提交GIT',
     link: decodeURI(location.href),
     desc: '问题提出 最近在自己的MAC上面提交Github代码的时候发现居然失败了： $ git push origin master Permission denied (publickey). fatal: Could not read from remote repository. Please make sure you have the correct access rights and the repository exists. 这不是坑爹吗',
-    owner: 'keysaim',
+    owner: 'kuperxu',
     repo: 'comments',
     oauth: {
       client_id: '8d920ad685683a529e83',
@@ -413,9 +413,9 @@ To github.com:keysaim/keysaim.github.io.git
 
     <footer id="footer" class="footer">
       <div class="social-links">
-      <a href="mailto:keysaim@gmail.com" rel="me" class="iconfont icon-email" title="email"></a>
-      <a href="https://github.com/keysaim" rel="me" class="iconfont icon-github" title="github"></a>
-  <a href="https://keysaim.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+      <a href="mailto:kuperxu@gmail.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://github.com/kuperxu" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="https://kuperxu.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
 </div>
 
 <div class="copyright">
@@ -435,7 +435,7 @@ To github.com:keysaim/keysaim.github.io.git
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
-    <span class="author">活在梦里(keysaim)</span>
+    <span class="author">活在梦里(kuperxu)</span>
   </span>
 </div>
     </footer>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>如何在github.io搭建Hugo博客站 - 活在梦里博客</title>
-  <link rel="alternate" hreflang="en" href="https://keysaim.github.io" />
+  <link rel="alternate" hreflang="en" href="https://kuperxu.github.io" />
 
 <meta name="renderer" content="webkit" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
@@ -25,10 +25,10 @@
 <meta name="mobile-web-app-capable" content="yes">
 
 
-<meta name="author" content="活在梦里(keysaim)" />
+<meta name="author" content="活在梦里(kuperxu)" />
   <meta name="description" content="摘要 在前面的博文中介绍了如何在github.io上搭建自己的博客站，基于的是Jekyll，这也是github中比较常用的方式，好处是gith" />
 
-  <meta name="keywords" content="Hugo, blog, keysaim, 活在梦里" />
+  <meta name="keywords" content="Hugo, blog, kuperxu, 活在梦里" />
 
 
 
@@ -38,7 +38,7 @@
 <meta name="generator" content="Hugo 0.37.1" />
 
 
-<link rel="canonical" href="https://keysaim.github.io/post/blog/deploy-hugo-blog-in-github.io/" />
+<link rel="canonical" href="https://kuperxu.github.io/post/blog/deploy-hugo-blog-in-github.io/" />
 
 
 
@@ -61,7 +61,7 @@
 <meta property="og:title" content="如何在github.io搭建Hugo博客站" />
 <meta property="og:description" content="摘要 在前面的博文中介绍了如何在github.io上搭建自己的博客站，基于的是Jekyll，这也是github中比较常用的方式，好处是gith" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://keysaim.github.io/post/blog/deploy-hugo-blog-in-github.io/" />
+<meta property="og:url" content="https://kuperxu.github.io/post/blog/deploy-hugo-blog-in-github.io/" />
 
 
 
@@ -110,7 +110,7 @@
 <body>
   <div id="mobile-navbar" class="mobile-navbar">
   <div class="mobile-header-logo">
-    <a href="/" class="logo">keysaim</a>
+    <a href="/" class="logo">kuperxu</a>
   </div>
   <div class="mobile-navbar-icon">
     <span></span>
@@ -136,7 +136,7 @@
 
   <header id="header" class="header container">
     <div class="logo-wrapper">
-  <a href="/" class="logo">keysaim</a>
+  <a href="/" class="logo">kuperxu</a>
 </div>
 
 <nav class="site-navbar">
@@ -247,7 +247,7 @@ brew install hugo
 <ol>
 <li><p>在github上面创建博客文章的repo</p>
 
-<p><code>Hugo</code>的建站部署方式跟<code>Jekyll</code>不同，github会自动的识别<code>Jekyll</code>并调用<code>Jekyll</code>工具帮你自动生成、更新博客站，所以我们只需要直接在自己的<code>&lt;username&gt;.github.io</code>中编写文章并上传即可。但是github并不能直接识别<code>Hugo</code>的内容，因此，这个博客站的生成、更新的工作得由你自己完成，<code>&lt;username&gt;.github.io</code>只是用来托管你生成后的静态网站的内容（github支持托管静态网站，请参见<a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">这里</a>)，因此，你还需要另一个git repo来真正的编辑、保存、管理你的博文。为此，博主创建了一个名为<a href="https://github.com/keysaim/blogs">blogs</a>的repo，以下说到博文管理repo指的就是这个repo。</p></li>
+<p><code>Hugo</code>的建站部署方式跟<code>Jekyll</code>不同，github会自动的识别<code>Jekyll</code>并调用<code>Jekyll</code>工具帮你自动生成、更新博客站，所以我们只需要直接在自己的<code>&lt;username&gt;.github.io</code>中编写文章并上传即可。但是github并不能直接识别<code>Hugo</code>的内容，因此，这个博客站的生成、更新的工作得由你自己完成，<code>&lt;username&gt;.github.io</code>只是用来托管你生成后的静态网站的内容（github支持托管静态网站，请参见<a href="https://help.github.com/articles/user-organization-and-project-pages/#user--organization-pages">这里</a>)，因此，你还需要另一个git repo来真正的编辑、保存、管理你的博文。为此，博主创建了一个名为<a href="https://github.com/kuperxu/blogs">blogs</a>的repo，以下说到博文管理repo指的就是这个repo。</p></li>
 
 <li><p>用<code>Hugo</code>建站</p>
 
@@ -265,7 +265,7 @@ git init
 
 <li><p>指定github源</p>
 
-<pre><code class="language-sh">git remote add origin git@github.com:keysaim/blogs.git
+<pre><code class="language-sh">git remote add origin git@github.com:kuperxu/blogs.git
 </code></pre></li>
 </ul>
 
@@ -303,14 +303,14 @@ cp themes/jane/exampleSite/config.toml ./
 <ol>
 <li><p>修改<code>baseURL</code></p>
 
-<p><code>baseURL</code>是你博客最终部署的网站的url，基于github.io的话就应该是这样的<a href="https://keysaim.github.io/">https://keysaim.github.io/</a>。</p></li>
+<p><code>baseURL</code>是你博客最终部署的网站的url，基于github.io的话就应该是这样的<a href="https://kuperxu.github.io/">https://kuperxu.github.io/</a>。</p></li>
 
 <li><p>启用gitment</p>
 
-<p>关于gitment的详细教程，请参见<a href="https://keysaim.github.io/post/2017-08-16-how-to-add-comments/">这篇博文</a>，按照教程准备好github的几个token之后，只需要修改<code>Hugo</code>配置中的这几行：</p>
+<p>关于gitment的详细教程，请参见<a href="https://kuperxu.github.io/post/2017-08-16-how-to-add-comments/">这篇博文</a>，按照教程准备好github的几个token之后，只需要修改<code>Hugo</code>配置中的这几行：</p>
 
 <pre><code class="language-toml">[params.gitment]          # Gitment is a comment system based on GitHub issues. see https://github.com/imsun/gitment
-    owner = &quot;keysaim&quot;              # Your GitHub ID
+    owner = &quot;kuperxu&quot;              # Your GitHub ID
     repo = &quot;comments&quot;               # The repo to store comments
     clientId = &quot;xxxx&quot;           # Your client ID
     clientSecret = &quot;xxxx&quot;       # Your client secret
@@ -379,7 +379,7 @@ git push origin master
 <ol>
 <li><p>添加你的github.io</p>
 
-<pre><code class="language-sh">git submodule add -b master git@github.com:keysaim/keysaim.github.io.git public
+<pre><code class="language-sh">git submodule add -b master git@github.com:kuperxu/kuperxu.github.io.git public
 </code></pre>
 
 <p>这里将其作为submodule添加进来，且放到<code>public</code>目录下面，<code>public</code>目录是<code>Hugo</code>生成静态文件的地方，这样的话咱们就可以把生成出来的静态文件直接上传到你的<code>&lt;username&gt;.github.io</code>的repo里面了</p></li>
@@ -401,7 +401,7 @@ git push origin master
 
 <li><p>查看你的github.io博客站</p>
 
-<p>正常情况下，过一会你就可以看到你基于<code>Hugo</code>的github.io博客站了，博主的是<a href="https://keysaim.github.io/">https://keysaim.github.io/</a>。</p></li>
+<p>正常情况下，过一会你就可以看到你基于<code>Hugo</code>的github.io博客站了，博主的是<a href="https://kuperxu.github.io/">https://kuperxu.github.io/</a>。</p></li>
 </ol>
 
 <h2 id="自动部署脚本">自动部署脚本</h2>
@@ -496,7 +496,7 @@ cd ..
     title: '如何在github.io搭建Hugo博客站',
     link: decodeURI(location.href),
     desc: '摘要 在前面的博文中介绍了如何在github.io上搭建自己的博客站，基于的是Jekyll，这也是github中比较常用的方式，好处是gith',
-    owner: 'keysaim',
+    owner: 'kuperxu',
     repo: 'comments',
     oauth: {
       client_id: '8d920ad685683a529e83',
@@ -513,13 +513,13 @@ cd ..
 
     <footer id="footer" class="footer">
       <div class="social-links">
-      <a href="mailto:keysaim@gmail.com" rel="me" class="iconfont icon-email" 
+      <a href="mailto:kuperxu@gmail.com" rel="me" class="iconfont icon-email" 
         title="email" target="_blank">
       </a>
-      <a href="https://github.com/keysaim" rel="me" class="iconfont icon-github" 
+      <a href="https://github.com/kuperxu" rel="me" class="iconfont icon-github" 
         title="github" target="_blank">
       </a>
-  <a href="https://keysaim.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" 
+  <a href="https://kuperxu.github.io/index.xml" type="application/rss+xml" class="iconfont icon-rss" 
     title="rss" target="_blank">
   </a>
 </div>
@@ -541,7 +541,7 @@ cd ..
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
-    <span class="author">活在梦里(keysaim)</span>
+    <span class="author">活在梦里(kuperxu)</span>
   </span>
 </div>
     </footer>
