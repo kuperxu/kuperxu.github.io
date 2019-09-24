@@ -6,7 +6,7 @@
     <description>Recent content on Jane - A super concise theme for Hugo</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 18 Aug 2019 15:03:19 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 04 Sep 2019 16:01:23 +0800</lastBuildDate>
     
         <atom:link href="https://kuperxu.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -33,6 +33,170 @@
         <description>
 
 &lt;h1 id=&#34;破山中贼易-破心中贼难&#34;&gt;破山中贼易，破心中贼难。&lt;/h1&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>iOS Crash 分析</title>
+      <link>https://kuperxu.github.io/post/ios-crash-analysis/</link>
+      <pubDate>Wed, 04 Sep 2019 16:01:23 +0800</pubDate>
+      
+      <guid>https://kuperxu.github.io/post/ios-crash-analysis/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;what-crash-is&#34;&gt;What Crash Is&lt;/h2&gt;
+
+&lt;p&gt;APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或是堆栈并不完整，我们应该如何分析，以下对此情况进行分析讨论。&lt;/p&gt;
+
+&lt;h2 id=&#34;寄存器&#34;&gt;寄存器&lt;/h2&gt;
+
+&lt;p&gt;处理系统堆栈或是堆栈不完整的上报时，我们需要关注寄存器的信息。寄存器讨论针对ARM64架构下。iOS下大抵包含两类寄存器。&lt;/p&gt;
+
+&lt;p&gt;1.&lt;code&gt;r0 - r30&lt;/code&gt; 31个通用整形寄存器，寄存器大小为64位。没有名为X31或W31的寄存器。 一些指令被编码了，以使数字31代表零寄存器ZR（WZR / XZR）。 还有一组受限制的指令，其中一个或多个参数被编码，以使数字31代表堆栈指针（SP）。
+2.&lt;code&gt;V0 - V31&lt;/code&gt; 32个向量寄存器，也就是是浮点型寄存器，寄存器大小为128位。&lt;/p&gt;
+
+&lt;p&gt;其中关于一些寄存器代表的信息中：x29就是FP, x30就是LR，这里会有人指出x31代表着SP寄存器上面也有解释，这只是个代号实际上并无x31寄存器。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SP（Stack Pointer）栈顶寄存器，指向栈顶也就是低地址。在指令编码中，使用 SP/WSP来进行对SP寄存器的访问。&lt;/li&gt;
+&lt;li&gt;FP（Frame pointer）栈底寄存器，指向栈底也就是高地址。&lt;/li&gt;
+&lt;li&gt;PC（Program Counter）程序计数器，存的是当前执行的指令的地址。在arm64中，软件是不能改写PC寄存器的。&lt;/li&gt;
+&lt;li&gt;LR (link register) 链接寄存器，当调用函数时，返回地址即PC的值被保存到LR中。&lt;/li&gt;
+&lt;li&gt;SPSR 状态寄存器，用于存放程序运行中一些状态标识。不同于编程语言里面的if else.在汇编中就需要根据状态寄存器中的一些状态来控制分支的执行。状态寄存器又分为 The Current Program Status Register (CPSR) 和 The Saved Program Status Registers (SPSRs)。 一般都是使用CPSR， 当发生异常时， CPSR会存入SPSR。当异常恢复，再拷贝回CPSR。&lt;/li&gt;
+&lt;li&gt;CPSR (current program status register) 程序状态寄存器。cpsr在用户级编程时用于存储条件码；CPSR包含条件码标志，中断禁止位，当前处理器模式以及其他状态和控制信息。&lt;/li&gt;
+&lt;li&gt;ESR/FAR 异常寄存器&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp;amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;方法的返回值一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;关于详细的iOS函数调用时各寄存器的作用可见文章&lt;a href=&#34;https://blog.cnbluebox.com/blog/2017/07/24/arm64-start/&#34;&gt;iOS函数调用&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;有了这些知识我们就可以通过crash时寄存器的值来获取更多的有用信息，crash的一次寄存器信息如下。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Thread 0 crashed with ARM 64 Thread State:
+     x0:  0x000000013555e980    x1: 0x000000024582c242    x2: 0x000000012e270df0     x3: 0x0000000000000040
+     x4:  0x000000012e270e40    x5: 000000000000000000    x6: 0x0000000000000062     x7: 0x00000000000001a0
+     x8:  0x0000000000000230    x9: 0x0000000114cc7f40   x10: 0x000000011107ca00    x11: 0x00000078000000ff
+    x12: 0x0000000354856a04    x13: 0x200000001355ba12   x14: 0x0000000000000006    x15: 0x0000000000000001
+    x16: 0x000000001355ba10    x17: 0x001a750217da5dc4   x18: 000000000000000000    x19: 0x0000000134a5d4a0
+    x20: 0x000000024582c242    x21: 0x000000010aac7e5f   x22: 0x0000000106526568    x23: 0x0000000107617000
+    x24: 0x00000002521cf000    x25: 0x00000002521cf000   x26: 0x0000000100effb68    x27: 0x0000000248b3bc00
+    x28: 0x0000000000000001     fp: 0x000000016f008e60    lr: 0x00000001054bcc7c    
+     sp: 0x000000016f008e30     pc: 0x00000002170cb6b0  cpsr: 0x20000000
+    esr: 0x92000006            far: 0x000000001355ba20
+
+x-detect:   setBackgroundColor: 
+
+Binary Images:
+0x100fe4000 - 0x1061abfff  MainProject arm64 &amp;lt;1f27f974e5bc3d709885c2a614886aba&amp;gt; /private/var/containers/Bundle/Application/C1317DCE-EF83-4FB6-A722-B483B3951961/QQ.app/Frameworks/MainProject.framework/MainProject
+0x109188000 - 0x10ab97fff  TlibDy arm64 &amp;lt;c80a1bc104f6361e9d46b12ef6a44e06&amp;gt; /private/var/containers/Bundle/Application/C1317DCE-EF83-4FB6-A722-B483B3951961/QQ.app/Frameworks/TlibDy.framework/TlibDy
+0x217ab6000 - 0x217ac0fff  libsystem_pthread.dylib arm64e &amp;lt;829ee40698373e81aab436c9f70b6726&amp;gt; /usr/lib/system/libsystem_pthread.dylib
+0x217a1d000 - 0x217a48fff  libsystem_kernel.dylib arm64e &amp;lt;f2a2738e22e8381ebef30a0556212114&amp;gt; /usr/lib/system/libsystem_kernel.dylib
+0x2178f4000 - 0x21791efff  libdyld.dylib arm64e &amp;lt;5666efd3f0dd3b1cae0b0fac7e92121c&amp;gt; /usr/lib/system/libdyld.dylib
+0x217941000 - 0x2179c0fff  libsystem_c.dylib arm64e &amp;lt;75ac4c9d5bee3060b6da8cfa1bddb2a2&amp;gt; /usr/lib/system/libsystem_c.dylib
+0x2170ae000 - 0x217835fff  libobjc.A.dylib arm64e &amp;lt;e8055992eb2530e0b15a82af9bd334e4&amp;gt; /usr/lib/libobjc.A.dylib
+0x217041000 - 0x217099fff  libc++.1.dylib arm64e &amp;lt;d4063e21f493336286465788ebae505b&amp;gt; /usr/lib/libc++.1.dylib
+0x217d91000 - 0x2180f4fff  CoreFoundation arm64e &amp;lt;23157e07bf733823ba6d1816915ffece&amp;gt; /System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+0x218812000 - 0x218b0cfff  Foundation arm64e &amp;lt;fc334924845d3e44a4aab11d9af6cdef&amp;gt; /System/Library/Frameworks/Foundation.framework/Foundation
+0x21845a000 - 0x218811fff  CFNetwork arm64e &amp;lt;7bac5947136d32178a2c8ba7bb9ed387&amp;gt; /System/Library/Frameworks/CFNetwork.framework/CFNetwork
+0x21a06f000 - 0x21a081fff  GraphicsServices arm64e &amp;lt;76e795a126ce361ebb0ce1a8b674bddb&amp;gt; /System/Library/PrivateFrameworks/GraphicsServices.framework/GraphicsServices
+0x2449de000 - 0x245b1dfff  UIKitCore arm64e &amp;lt;19fd9883fb333736aa548b4f3b4a1958&amp;gt; /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore
+0x21f15f000 - 0x21fe97fff  JavaScriptCore arm64e &amp;lt;8f2ae7aacd1236018362df5ae43e0d5e&amp;gt; /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
+0x220957000 - 0x2223b1fff  WebCore arm64e &amp;lt;1763a71221433e1a8220577707d6f002&amp;gt; /System/Library/PrivateFrameworks/WebCore.framework/WebCore
+0x21ddf8000 - 0x21deedfff  AVFAudio arm64e &amp;lt;f68c9dba3bad38dfbf4a959b06253505&amp;gt; /System/Library/Frameworks/AVFoundation.framework/Frameworks/AVFAudio.framework/AVFAudio
+0x21d86b000 - 0x21da8efff  CoreMotion arm64e &amp;lt;457d54813e293412939c0799ab6e0658&amp;gt; /System/Library/Frameworks/CoreMotion.framework/CoreMotion
+0x22c07a000 - 0x22c4c4fff  SceneKit arm64e &amp;lt;a339b467eda639b6818b5a517aaf0aa9&amp;gt; /System/Library/Frameworks/SceneKit.framework/SceneKit
+0x21a081fff  GraphicsServices arm64e &amp;lt;76e795a126ce361ebb0ce1a8b674bddb&amp;gt; /System/Library/PrivateFrameworks/GraphicsServices.framework/GraphicsServices
+0x2449de000 - 0x245b1dfff  UIKitCore arm64e &amp;lt;19fd9883fb333736aa548b4f3b4a1958&amp;gt; /System/Library/PrivateFrameworks/UIKitCore.framework/UIKitCore
+0x21f15f000 - 0x21fe97fff  JavaScriptCore arm64e &amp;lt;8f2ae7aacd1236018362df5ae43e0d5e&amp;gt; /System/Library/Frameworks/JavaScriptCore.framework/JavaScriptCore
+0x220957000 - 0x2223b1fff  WebCore arm64e &amp;lt;1763a71221433e1a8220577707d6f002&amp;gt; /System/Library/PrivateFrameworks/WebCore.framework/WebCore
+0x21ddf8000 - 0x21deedfff  AVFAudio arm64e &amp;lt;f68c9dba3bad38dfbf4a959b06253505&amp;gt; /System/Library/Frameworks/AVFoundation.framework/Frameworks/AVFAudio.framework/AVFAudio
+0x21d86b000 - 0x21da8efff  CoreMotion arm64e &amp;lt;457d54813e293412939c0799ab6e0658&amp;gt; /System/Library/Frameworks/CoreMo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;dsym&#34;&gt;DSYM&lt;/h2&gt;
+
+&lt;p&gt;知道了寄存器的值还不够，寄存器中如果存储基础类型可以直接读取，但寄存器一般存储的都是对象的地址，或是方法的地址。如何符号化。那么就要用到 DSYM（debug symbol） &amp;amp; atos。这部分也可自行google使用。使用命令大致贴一下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Binary Images:
+0x100fe4000 - 0x1061abfff  MainProject arm64 &amp;lt;1f27f974e5bc3d709885c2a614886aba&amp;gt; /private/var/containers/Bundle/Application/C1317DCE-EF83-4FB6-A722-B483B3951961/QQ.app/Frameworks/MainProject.framework/MainProject  //Crash APP 版本的UUID
+
+dwarfdump --uuid Your.app.dSYM //DSYM的UUID
+两个对比确保一致性。
+
+atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/armv7 -l &amp;lt;load-address&amp;gt; &amp;lt;address&amp;gt;
+//翻译堆栈命令
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;上述只能符号化非系统的代码段地址，系统库地址的符号化要通过对应系统版本和架构的符号表得出。&lt;/p&gt;
+
+&lt;h2 id=&#34;尾调优化&#34;&gt;尾调优化&lt;/h2&gt;
+
+&lt;p&gt;crash的堆栈有时并不像实际代码调用情况，这其中一个原因是尾调优化（其他原因暂未找到请各位赐教）。尾调优化内容可以参考：
+&lt;a href=&#34;http://www.ruanyifeng.com/blog/2015/04/tail-call.html&#34;&gt;尾调优化&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;尾调用优化的本质就是栈帧的复用。
+函数调用的过程：函数调用会在内存中申请一块“栈帧”，保存调用的地址和内部变量等信息。如果函数A内部调用函数B，那么在函数A的栈帧上就会加上一个函数B的栈帧。
+如果函数B再调用了函数C，那么函数A的栈帧上就会有序加上函数B和函数C的栈帧。如果C运行结束了，返回到函数B，C的栈帧才会消失。&lt;/p&gt;
+
+&lt;p&gt;尾调用优化的条件有三点：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;尾调用函数不需要访问当前栈帧中的变量。（变量是形参可以，变量是实参不行）&lt;/li&gt;
+&lt;li&gt;尾调用返回后，函数没有语句需要执行。（最后一步仅仅只能执行一个函数）&lt;/li&gt;
+&lt;li&gt;尾调用结果就是函数的返回值。（不能有别的“附加品”，最后一步仅仅只能是执行一个函数）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;实战分析&#34;&gt;实战分析&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-现网出现crash堆栈如下&#34;&gt;1.现网出现crash堆栈如下&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;0 libobjc.A.dylib 0x00000001cee7f6b0 objc_msgSend + 16
+1 Foundation 0x00000001d06db110 ___57-[NSNotificationCenter addObserver:selector:name:object:]_block_invoke_2 + 16
+2 CoreFoundation 0x00000001cfbd11d0 ___CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 16
+3 CoreFoundation 0x00000001cfbd1190 ____CFXRegistrationPost_block_invoke + 56
+4 CoreFoundation 0x00000001cfbd0640 __CFXRegistrationPost + 420
+5 CoreFoundation 0x00000001cfbd02c0 ____CFXNotificationPost_block_invoke + 88
+6 CoreFoundation 0x00000001cfb46e70 -[_CFXNotificationRegistrar find:object:observer:enumerator:] + 1496
+7 CoreFoundation 0x00000001cfbcfd70 _CFXNotificationPost + 712
+8 Foundation 0x00000001d05cc6b0 -[NSNotificationCenter postNotificationName:object:userInfo:] + 68
+9 MainProject 0x0000000107011eb0 -[QQThemeManager reloadCustUIAppearance:] (QQThemeManager.mm:1060)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;主题切换时发送通知到业务，业务方本应释放的对象接到了通知，也就是野指针。主题通知全业务都会接收到一搜索大概有30处左右的通知，一个个排查不现实，需要定位到具体调用方。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-寄存器分析&#34;&gt;2.寄存器分析&lt;/h3&gt;
+
+&lt;p&gt;1.结合上述寄存器所代表的信息，分析出x1对应的crash方法，经过系统符号化得到方法 setBackgroundColor: 与 x-dectect 检测的方法一致，说明堆栈和寄存器信息正确。&lt;/p&gt;
+
+&lt;p&gt;2.LR代码栈帧调用的返回地址，也就是可以定位到在哪个方法里面调用了 setBackgroundColor 方法，通过对应APP版本的DSYM分析出是登录业务的 handleThemeChange: 方法。&lt;/p&gt;
+
+&lt;p&gt;3.分析业务代码，文件使用MRC内存管理，嗯~真香。分析几个全局变量很简单就发现了，对象的使用不当之处。初始化变量使用的autoRelease方法，对象并没有真正被self持有，一旦被使用完这个对象就彻底被释放了，在访问也会马上Crash。&lt;/p&gt;
+
+&lt;h2 id=&#34;字节小感&#34;&gt;字节小感&lt;/h2&gt;
+
+&lt;p&gt;目前bit和byte的比较
+bit:&lt;/p&gt;
+
+&lt;p&gt;计算机中的最小存储单元
+存储内容总是0或1
+所有二进制状态的实体都可以使用1bit表示
+8bits组成1byte
+不能够单独寻址
+byte：&lt;/p&gt;
+
+&lt;p&gt;1byte包含8bits
+可以存储所有ASCII所有字符（这是它包含8bits的初衷）
+十进制整数范围[-128,127]或[0, 255]
+最小的可寻址存储单元。&lt;/p&gt;
+
+&lt;p&gt;iOS最小内存分配16B。&lt;/p&gt;
 </description>
       
     </item>
@@ -110,425 +274,6 @@ group opacity（不透明）
 首先它是一个定时器，需要我们手动加入到runloop。本质上和NSTimer是一样的。但是他不同的是每次频率刷新的时候会调用方法。the selector on the target is called when the screen’s contents need to be updated.调用方法target中可以使用timestamp（时间戳）来计算FPS。可以通过时间戳的插值这样计算&lt;code&gt;1/（timestamp1-timestamp2）&lt;/code&gt;计算但是由于timestamp1-timestamp2差值很小不易计算一般通过count多计算几次这样计算&lt;code&gt;count/（timestamp1-timestamp(n)）&lt;/code&gt;&amp;ndash;相当精准。
 可以参考一个很好的源码:&lt;a href=&#34;https://github.com/jvjishou/FHHFPSIndicator&#34;&gt;Github&lt;/a&gt;&lt;/p&gt;
 </description>
-      
-    </item>
-    
-    <item>
-      <title>Shortcodes Preview</title>
-      <link>https://kuperxu.github.io/post/shortcodes-preview/</link>
-      <pubDate>Sun, 04 Mar 2018 16:01:23 +0800</pubDate>
-      
-      <guid>https://kuperxu.github.io/post/shortcodes-preview/</guid>
-      
-        <description>&lt;h2 id=&#34;what-a-shortcode-is&#34;&gt;What a Shortcode is&lt;/h2&gt;
-
-&lt;p&gt;Hugo loves Markdown because of its simple content format, but there are times when Markdown falls short. Often, content authors are forced to add raw HTML (e.g., video &lt;code&gt;&amp;lt;iframes&amp;gt;&lt;/code&gt;) to Markdown content. We think this contradicts the beautiful simplicity of Markdown&amp;rsquo;s syntax.&lt;/p&gt;
-
-&lt;p&gt;Hugo created &lt;strong&gt;shortcodes&lt;/strong&gt; to circumvent these limitations.&lt;/p&gt;
-
-&lt;p&gt;A shortcode is a simple snippet inside a content file that Hugo will render using a predefined template. Note that shortcodes will not work in template files. If you need the type of drop-in functionality that shortcodes provide but in a template, you most likely want a [partial template][partials] instead.&lt;/p&gt;
-
-&lt;p&gt;In addition to cleaner Markdown, shortcodes can be updated any time to reflect new classes, techniques, or standards. At the point of site generation, Hugo shortcodes will easily merge in your changes. You avoid a possibly complicated search and replace operation.&lt;/p&gt;
-
-&lt;p&gt;More details: &lt;a href=&#34;https://gohugo.io/content-management/shortcodes/&#34;&gt;https://gohugo.io/content-management/shortcodes/&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;blockquotes&#34;&gt;blockquotes&lt;/h2&gt;
-
-&lt;p&gt;Normal quote:
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a simple quote.&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;&lt;/strong&gt;
-    
-      
-        
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Quote with author:
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quote with only an Author named Author2.&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;Author2&lt;/strong&gt;
-    
-      
-        
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Quote with author and source:
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quote from Author3 and source &amp;ldquo;source.&amp;rdquo;&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;Author3&lt;/strong&gt;
-    
-      &lt;cite&gt;Source&lt;/cite&gt;
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Quote with author and link:
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-      
-      
-      
-    
-     
-      
-    
-    
-
-    
-    
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quote from Author4 and links to &lt;a href=&#34;https://www.google.com&#34;&gt;https://www.google.com&lt;/a&gt;.&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;Author4&lt;/strong&gt;
-    
-      
-        &lt;cite&gt;
-          &lt;a href=&#34;https://www.google.com&#34; title=&#34;https://www.google.com&#34;&gt;google.com&lt;/a&gt; 
-        &lt;/cite&gt;
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Quote with author, link and title:
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quote from Author5 and links to &lt;a href=&#34;https://www.google.com&#34;&gt;https://www.google.com&lt;/a&gt; with title &amp;ldquo;Google.&amp;rdquo;&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;Author5&lt;/strong&gt;
-    
-      
-        &lt;cite&gt;
-          &lt;a href=&#34;https://www.google.com&#34; title=&#34;https://www.google.com&#34;&gt;Google&lt;/a&gt; 
-        &lt;/cite&gt;
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Quote with author and a link longer than 32 characters, string is first cut at 32 characters then everything after the last forward slash is removed
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-      
-      
-      
-    
-     
-      
-    
-    
-
-    
-    
-         
-         
-         
-
-         
-        
-        
-        
-        
-      
-      
-    
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;This is a quote from Author5 and links to &lt;a href=&#34;https://twitter.com/CryptoGangsta/status/716427930126196737&#34;&gt;https://twitter.com/CryptoGangsta/status/716427930126196737&lt;/a&gt; which is longer than 32 characters.
-  &lt;br&gt;And this is a new line in the quote with the HTML br tag.&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;Author6&lt;/strong&gt;
-    
-      
-        &lt;cite&gt;
-          &lt;a href=&#34;https://twitter.com/CryptoGangsta/status/716427930126196737&#34; title=&#34;https://twitter.com/CryptoGangsta/status/716427930126196737&#34;&gt;twitter.com/CryptoGangsta/...&lt;/a&gt; 
-        &lt;/cite&gt;
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;p&gt;Test from the Octopress blockquote page at: &lt;a href=&#34;http://octopress.org/docs/plugins/blockquote/&#34;&gt;http://octopress.org/docs/plugins/blockquote/&lt;/a&gt;
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-
-
-
-
-      
-      
-      
-    
-     
-      
-    
-    
-
-    
-    
-         
-         
-         
-
-         
-        
-        
-        
-        
-        
-        
-      
-      
-    
-  
-
-
-&lt;blockquote&gt;
-  &lt;p&gt;Over the past 24 hours I&amp;rsquo;ve been reflecting on my life &amp;amp; I&amp;rsquo;ve realized only one thing. I need a medieval battle axe.&lt;/p&gt;
-  &lt;footer&gt;
-    &lt;strong&gt;@allanbranch&lt;/strong&gt;
-    
-      
-        &lt;cite&gt;
-          &lt;a href=&#34;https://twitter.com/allanbranch/status/90766146063712256&#34; title=&#34;https://twitter.com/allanbranch/status/90766146063712256&#34;&gt;twitter.com/allanbranch/status/...&lt;/a&gt; 
-        &lt;/cite&gt;
-      
-    
-  &lt;/footer&gt;
-&lt;/blockquote&gt;
-&lt;/p&gt;
-
-&lt;h2 id=&#34;music&#34;&gt;music&lt;/h2&gt;
-
-&lt;p&gt;&lt;iframe style=&#34;max-width: 100%&#34;
-      class=&#34;music163&#34;
-      frameborder=&#34;no&#34;
-      border=&#34;0&#34;
-      marginwidth=&#34;0&#34;
-      marginheight=&#34;0&#34;
-      width=&#34;330&#34;
-      height=&#34;86&#34;
-      src=&#34;//music.163.com/outchain/player?type=2&amp;id=3950552&amp;auto=0&amp;height=66&#34;&gt;
-    &lt;/iframe&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;gist&#34;&gt;gist&lt;/h2&gt;
-
-&lt;p&gt;We can embed the gist in our content via username and gist ID pulled from the URL:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{{&amp;lt; gist spf13 7896402 &amp;gt;}}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Display:&lt;/p&gt;
-
-&lt;script type=&#34;application/javascript&#34; src=&#34;https://gist.github.com/spf13/7896402.js&#34;&gt;&lt;/script&gt;
-
-
-&lt;h2 id=&#34;expand&#34;&gt;expand&lt;/h2&gt;
-
-&lt;p&gt;The Expand shortcode displays an expandable/collapsible section of text on your page. Here is an example&lt;/p&gt;
-
-&lt;details&gt;
-  &lt;summary style=&#34;background-color:#f5f5f5;border:1px solid #ccc;padding:5px;&#34;&gt;
-    Is this learn theme rocks ?
-    
-  &lt;/summary&gt;
-  
-Yes !.
-
-&lt;/details&gt;
-
-
-&lt;h3 id=&#34;usage&#34;&gt;Usage&lt;/h3&gt;
-
-&lt;p&gt;this shortcode takes exactly one optional parameter to define the text that appears next to the expand/collapse icon. (default is “Click to expand”)&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{{&amp;lt; expand &amp;quot;Is this learn theme rocks ?&amp;quot; &amp;gt;}}
-Yes !.
-{{&amp;lt; /expand &amp;gt;}}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;youtube&#34;&gt;youtube&lt;/h2&gt;
-
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//www.youtube.com/embed/w7Ft2ymGmfc&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
-&lt;/div&gt;
-
-
-&lt;h2 id=&#34;vimeo&#34;&gt;vimeo&lt;/h2&gt;
-
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
-  &lt;iframe src=&#34;//player.vimeo.com/video/146022717&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; webkitallowfullscreen mozallowfullscreen allowfullscreen&gt;&lt;/iframe&gt;
- &lt;/div&gt;
-
-
-&lt;h2 id=&#34;youku&#34;&gt;youku&lt;/h2&gt;
-
-
-
-&lt;div style=&#34;position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;&#34;&gt;
-    &lt;iframe src=&#34;https://player.youku.com/embed/XMzQ0ODUxMjM2NA?autoplay=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%;&#34; allowfullscreen frameborder=&#34;0&#34; title=&#34;YouKu Video&#34;&gt;
-    &lt;/iframe&gt;
-&lt;/div&gt;</description>
       
     </item>
     
