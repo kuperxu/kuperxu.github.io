@@ -17,7 +17,7 @@
       <pubDate>Wed, 04 Sep 2019 16:01:23 +0800</pubDate>
       
       <guid>https://kuperxu.github.io/post/ios-crash-analysis/</guid>
-      <description>What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或</description>
+      <description>What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。</description>
     </item>
     
     <item>
@@ -36,24 +36,6 @@
 
 &lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;![This is an image in `static/image` folder.](/image/example.jpg)
 &lt;/code&gt;&lt;/pre&gt;</description>
-    </item>
-    
-    <item>
-      <title>Shortcodes Notice Preview</title>
-      <link>https://kuperxu.github.io/post/shortcode-notice/</link>
-      <pubDate>Sat, 03 Mar 2018 16:01:23 +0800</pubDate>
-      
-      <guid>https://kuperxu.github.io/post/shortcode-notice/</guid>
-      <description>normal use Note example: {{% notice note %}} A notice disclaimer {{% /notice %}} Result: note A notice disclaimer You could custom title : {{% notice note 笔记 %}} A notice disclaimer {{% /notice %}} 笔记 A notice disclaimer tip {{% notice tip %}} A tip disclaimer {{% /tip %}} tip A tip disclaimer info {{% notice info %}} A info disclaimer {{% /notice %}} info An information</description>
-    </item>
-    
-    <item>
-      <title>Jane-Theme Footnote Preview</title>
-      <link>https://kuperxu.github.io/post/doc-footnote-preview/</link>
-      <pubDate>Thu, 01 Mar 2018 16:01:23 +0800</pubDate>
-      
-      <guid>https://kuperxu.github.io/post/doc-footnote-preview/</guid>
-      <description>&lt;p&gt;Hugo-theme-jane optimized for footnote. When you mouse hover the footnote&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:example&#34;&gt;&lt;a href=&#34;#fn:example&#34;&gt;1&lt;/a&gt;&lt;/sup&gt; , footnote content will be displayed.&lt;/p&gt;</description>
     </item>
     
   </channel>
