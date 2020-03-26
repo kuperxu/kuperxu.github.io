@@ -69,7 +69,7 @@
 <meta itemprop="description" content="What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或">
 <meta itemprop="datePublished" content="2019-09-04T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2018-03-05T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="2434">
+<meta itemprop="wordCount" content="2501">
 
 
 
@@ -347,7 +347,7 @@
             <a href="https://kuperxu.github.io/categories/ios/"> iOS </a>
             
           </div>
-        <span class="more-meta"> 约 2434 字 </span>
+        <span class="more-meta"> 约 2501 字 </span>
           <span class="more-meta"> 预计阅读 5 分钟 </span>
 
         
@@ -399,8 +399,15 @@
 <li>CPSR (current program status register) 程序状态寄存器。cpsr在用户级编程时用于存储条件码；CPSR包含条件码标志，中断禁止位，当前处理器模式以及其他状态和控制信息。</li>
 <li>ESR/FAR 异常寄存器</li>
 </ul>
-<p><em><strong>一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。</strong></em></p>
-<p><em><strong>方法的返回值一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。</strong></em></p>
+<p><em><strong>iOS调用惯例，调用惯例即编译约定好的参数和返回值的存取顺序。调用惯例可以随 <strong>attribute</strong>((cdecl))，设置而改变。</strong></em></p>
+<ul>
+<li>
+<p>参数:一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。</p>
+</li>
+<li>
+<p>方法的返回值:一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。</p>
+</li>
+</ul>
 <blockquote>
 <p>关于详细的iOS函数调用时各寄存器的作用可见文章<a href="https://blog.cnbluebox.com/blog/2017/07/24/arm64-start/">iOS函数调用</a></p>
 </blockquote>

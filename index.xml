@@ -79,8 +79,15 @@ bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固
 &lt;li&gt;CPSR (current program status register) 程序状态寄存器。cpsr在用户级编程时用于存储条件码；CPSR包含条件码标志，中断禁止位，当前处理器模式以及其他状态和控制信息。&lt;/li&gt;
 &lt;li&gt;ESR/FAR 异常寄存器&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;em&gt;&lt;strong&gt;一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp;amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;&lt;strong&gt;方法的返回值一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;iOS调用惯例，调用惯例即编译约定好的参数和返回值的存取顺序。调用惯例可以随 &lt;strong&gt;attribute&lt;/strong&gt;((cdecl))，设置而改变。&lt;/strong&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;参数:一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp;amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;方法的返回值:一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;关于详细的iOS函数调用时各寄存器的作用可见文章&lt;a href=&#34;https://blog.cnbluebox.com/blog/2017/07/24/arm64-start/&#34;&gt;iOS函数调用&lt;/a&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
