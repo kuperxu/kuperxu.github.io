@@ -32,10 +32,12 @@
 
 
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
 
 <link rel="canonical" href="https://kuperxu.github.io/post/ios-checkm8-all/" />
+
+
 
 
 
@@ -51,7 +53,7 @@
 
 
 
-<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+<link rel="stylesheet" href="/sass/jane.min.fa3d941d1d0e0ddc985804227feabffea55c89883eb0af34e0532a7ae9135151.css" integrity="sha256-&#43;j2UHR0ODdyYWAQif&#43;q//qVciYg&#43;sK804FMqeukTUVE=" media="screen" crossorigin="anonymous">
 
 
 
@@ -65,16 +67,13 @@
 <meta property="article:modified_time" content="2019-09-29T11:42:22+08:00" />
 <meta itemprop="name" content="iOS Device Checkm8">
 <meta itemprop="description" content="checkm8 Checkm8 iPhone上的史诗级硬件漏洞，能够让iPhone 4s到iPhone X实现永久越狱，且无法修补。Source Code 关于越狱 越狱breakja">
-
-
 <meta itemprop="datePublished" content="2019-09-29T11:42:22&#43;08:00" />
 <meta itemprop="dateModified" content="2019-09-29T11:42:22&#43;08:00" />
 <meta itemprop="wordCount" content="1173">
 
 
 
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="iOS Device Checkm8"/>
 <meta name="twitter:description" content="checkm8 Checkm8 iPhone上的史诗级硬件漏洞，能够让iPhone 4s到iPhone X实现永久越狱，且无法修补。Source Code 关于越狱 越狱breakja"/>
 
@@ -361,57 +360,39 @@
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#checkm8">checkm8</a>
-<ul>
-<li><a href="#关于越狱">关于越狱</a></li>
-</ul></li>
-<li><a href="#主角checkm8">主角Checkm8</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#checkm8">checkm8</a>
+      <ul>
+        <li><a href="#关于越狱">关于越狱</a></li>
+      </ul>
+    </li>
+    <li><a href="#主角checkm8">主角Checkm8</a></li>
+  </ul>
 </nav>
   </div>
 </div>
 
     
     <div class="post-content">
-      
-
-<h2 id="checkm8">checkm8</h2>
-
+      <h2 id="checkm8">checkm8</h2>
 <blockquote>
 <p>Checkm8 iPhone上的史诗级硬件漏洞，能够让iPhone 4s到iPhone X实现永久越狱，且无法修补。<a href="https://github.com/axi0mX/ipwndfu">Source Code</a></p>
 </blockquote>
-
 <h3 id="关于越狱">关于越狱</h3>
-
 <p>越狱breakjail：使用户设备获得超级管理员权限，拥有对系统底层的读写权限。绕过苹果的安全监测安装非签名的APP、自定义系统。关注越狱动态可以看<a href="https://www.reddit.com/r/jailbreak/">reddit论坛</a>。</p>
-
 <p><a href="https://zhuanlan.zhihu.com/p/32766546">详细越狱原理介绍</a>。</p>
-
 <p><strong>越狱是利用了两个漏洞.</strong>
 bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固件更新来修补，必须由新硬件修补。由于漏洞在启动环节发生的很早，而且漏洞Payload拥有对硬件的全部读取权限。 如它可以利用AES硬件引擎的GID密码来解密IMG3文件，而IMG3文件允许解密新的iOS更新。由于他几乎在任何检查点之前，恶意代码在所有事情之前被注入，因此允许创建通道以绕过所有检查或者简单地禁用他们。</p>
-
 <p>用户空间漏洞：在内核加载期间或之后完成漏洞利用，并且可以通过软件更新轻松的被Apple修补。由于这是所有的检查，它将恶意代码直接注入到内核中。这些开口不是很容易找到，一旦发现可以修补。</p>
-
 <p><a href="https://www.jianshu.com/p/c5c22f9a06e2">https://www.jianshu.com/p/c5c22f9a06e2</a> ..完美越狱非完美越狱</p>
-
 <p><strong>每个人都知道的默认密码</strong>
 关于iOS最严重的秘密之一就是它的root密码“alpine”。每个人都知道，苹果也不打算改变它。使用root密码给用户访问设备的核心功能，如果落入不法之徒，这可能是灾难性的。</p>
-
 <p>幸运的是，这个密码可以从一个shell应用程序中更改，但是后期的破解者经常忘记这样做，从而使他们的设备面临漏洞。</p>
-
 <h2 id="主角checkm8">主角Checkm8</h2>
-
 <p>原理：利用bootrom漏洞进行的越狱。该漏洞是针对iPad或iPhone上启动ROM的某个向量指针。</p>
-
 <p>价值：bootrom漏洞的特性：不可修复，可玩性高。从而可以得出以此设备可以刷任何版本的固件，当然包含降级，甚至可以刷安卓，还可以做远程调试。
 影响：对普通消费者杀伤性几乎为零，生效条件严格：用数据线和电脑连接，设备进入DFU mode。因破解是通过启动ROM的向量指针，并非是撬开iOS系统，因此是非完美越狱，这意味着每次重新启动iPhone时，攻击媒介都会再次关闭。理论上不会被APT攻击装一个持久化的后门(有待分析)。</p>
-
 <p>PS:APT即高级可持续威胁攻击,也称为定向威胁攻击，指某组织对特定对象展开的持续有效的攻击活动。 这种攻击活动具有极强的隐蔽性和针对性,通常会运用受感染的各种介质、供应链和社会工程学等多种手段实施先进的、持久的且有效的威胁和攻击。</p>
-
 <blockquote>
 <p>思考：漏洞公布的时间点很值得考量，iPhone 11刚刚发布完成，这时发表声明3GS-iPhone X所有设备都有不可修复问题，新机XS及11是没问题的，是苹果的压迫还是说出售新机kpi的任务难以完成，当然这些各抒己见。不过从漏洞提出者的Git声明上可以看出“axi0mX觉得自己不是第一个发现这个问题的人，该漏洞很可能已经被一些其他公司利用了”。</p>
 </blockquote>
@@ -449,19 +430,6 @@ bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固
       
       <nav class="post-nav">
         
-          <a class="prev" href="/post/jane-theme-preview/">
-            
-            <i class="iconfont">
-              <svg  class="icon" viewBox="0 0 1024 1024" version="1.1"
-  xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-  width="18" height="18">
-  <path d="M691.908486 949.511495l75.369571-89.491197c10.963703-12.998035 10.285251-32.864502-1.499144-44.378743L479.499795 515.267417 757.434875 204.940602c11.338233-12.190647 11.035334-32.285311-0.638543-44.850487l-80.46666-86.564541c-11.680017-12.583596-30.356378-12.893658-41.662889-0.716314L257.233596 494.235404c-11.332093 12.183484-11.041474 32.266891 0.657986 44.844348l80.46666 86.564541c1.772366 1.910513 3.706415 3.533476 5.750981 4.877077l306.620399 321.703933C662.505829 963.726242 680.945807 962.528973 691.908486 949.511495z"></path>
-</svg>
-
-            </i>
-            <span class="prev-text nav-default">Jane 主题预览</span>
-            <span class="prev-text nav-mobile">上一篇</span>
-          </a>
         
           <a class="next" href="/post/ios-crash-analysis/">
             <span class="next-text nav-default">iOS Crash 分析</span>
@@ -498,6 +466,8 @@ bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固
   
 
     
+
+  
 
         </div>
       </div>
@@ -587,7 +557,9 @@ bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固
 
   <span class="copyright-year">
     &copy;
-    2019
+    
+      2019 -
+    2020
     <span class="heart">
       
       <i class="iconfont">
@@ -632,6 +604,12 @@ bootrom漏洞：在bootrom期间完成漏洞利用。他不能通过传统的固
 
 
 <script type="text/javascript" src="/js/main.638251f4230630f0335d8c6748e53a96f94b72670920b60c09a56fdc8bece214.js" integrity="sha256-Y4JR9CMGMPAzXYxnSOU6lvlLcmcJILYMCaVv3Ivs4hQ=" crossorigin="anonymous"></script>
+
+
+
+
+
+
 
 
 

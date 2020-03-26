@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>iOS on Jane - A super concise theme for Hugo</title>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 04 Sep 2019 16:01:23 +0800</pubDate>
       
       <guid>https://kuperxu.github.io/post/ios-crash-analysis/</guid>
-      <description>What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。</description>
+      <description>What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或</description>
     </item>
     
   </channel>

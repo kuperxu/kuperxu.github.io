@@ -23,7 +23,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 
 <meta name="author" content="kuperxu(活在梦里)" />
-  <meta name="description" content="What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。" />
+  <meta name="description" content="What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或" />
 
   <meta name="keywords" content="Hugo, blog, jane, kuperxu" />
 
@@ -32,10 +32,12 @@
 
 
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.68.3" />
 
 
 <link rel="canonical" href="https://kuperxu.github.io/post/ios-crash-analysis/" />
+
+
 
 
 
@@ -51,32 +53,29 @@
 
 
 
-<link rel="stylesheet" href="/sass/jane.min.af20b78e95c84de86b00a0242a4a77bd2601700e1b250edf27537d957ac0041d.css" integrity="sha256-ryC3jpXITehrAKAkKkp3vSYBcA4bJQ7fJ1N9lXrABB0=" media="screen" crossorigin="anonymous">
+<link rel="stylesheet" href="/sass/jane.min.fa3d941d1d0e0ddc985804227feabffea55c89883eb0af34e0532a7ae9135151.css" integrity="sha256-&#43;j2UHR0ODdyYWAQif&#43;q//qVciYg&#43;sK804FMqeukTUVE=" media="screen" crossorigin="anonymous">
 
 
 
 
 
 <meta property="og:title" content="iOS Crash 分析" />
-<meta property="og:description" content="What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。" />
+<meta property="og:description" content="What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://kuperxu.github.io/post/ios-crash-analysis/" />
 <meta property="article:published_time" content="2019-09-04T16:01:23+08:00" />
 <meta property="article:modified_time" content="2018-03-05T16:01:23+08:00" />
 <meta itemprop="name" content="iOS Crash 分析">
-<meta itemprop="description" content="What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。">
-
-
+<meta itemprop="description" content="What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或">
 <meta itemprop="datePublished" content="2019-09-04T16:01:23&#43;08:00" />
 <meta itemprop="dateModified" content="2018-03-05T16:01:23&#43;08:00" />
-<meta itemprop="wordCount" content="2624">
+<meta itemprop="wordCount" content="2434">
 
 
 
-<meta itemprop="keywords" content="tag-6," />
-<meta name="twitter:card" content="summary"/>
+<meta itemprop="keywords" content="tag-6," /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="iOS Crash 分析"/>
-<meta name="twitter:description" content="What Crash Is APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。"/>
+<meta name="twitter:description" content="What Crash Is APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或"/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -348,8 +347,8 @@
             <a href="https://kuperxu.github.io/categories/ios/"> iOS </a>
             
           </div>
-        <span class="more-meta"> 约 2624 字 </span>
-          <span class="more-meta"> 预计阅读 6 分钟 </span>
+        <span class="more-meta"> 约 2434 字 </span>
+          <span class="more-meta"> 预计阅读 5 分钟 </span>
 
         
         
@@ -365,41 +364,32 @@
   <h2 class="post-toc-title">文章目录</h2>
   <div class="post-toc-content">
     <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#what-crash-is">What Crash Is</a></li>
-<li><a href="#寄存器">寄存器</a></li>
-<li><a href="#dsym">DSYM</a></li>
-<li><a href="#尾调优化">尾调优化</a></li>
-<li><a href="#实战分析">实战分析</a>
-<ul>
-<li><a href="#1-现网出现crash堆栈如下">1.现网出现crash堆栈如下</a></li>
-<li><a href="#2-寄存器分析">2.寄存器分析</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#what-crash-is">What Crash Is</a></li>
+    <li><a href="#寄存器">寄存器</a></li>
+    <li><a href="#dsym">DSYM</a></li>
+    <li><a href="#尾调优化">尾调优化</a></li>
+    <li><a href="#实战分析">实战分析</a>
+      <ul>
+        <li><a href="#1现网出现crash堆栈如下">1.现网出现crash堆栈如下</a></li>
+        <li><a href="#2寄存器分析">2.寄存器分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#字节小感">字节小感</a></li>
+  </ul>
 </nav>
   </div>
 </div>
 
     
     <div class="post-content">
-      
-
-<h2 id="what-crash-is">What Crash Is</h2>
-
-<p>APP被强制中断的行为视为Crash。bugly、Umeng等平台中收集有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。如果堆栈中出现了系统堆栈或是堆栈并不完整，我们应该如何分析，以下对此情况进行分析讨论。</p>
-
+      <h2 id="what-crash-is">What Crash Is</h2>
+<p>APP被强制中断的行为视为Crash。数据上报中有完整的堆栈时我们可根据代码来分析出Crash原因，进行修正。当堆栈中出现了系统堆栈或是堆栈并不完整，我们应该如何分析，以下对此情况进行分析讨论。</p>
 <h2 id="寄存器">寄存器</h2>
-
 <p>处理系统堆栈或是堆栈不完整的上报时，我们需要关注寄存器的信息。寄存器讨论针对ARM64架构下。iOS下大抵包含两类寄存器。</p>
-
 <p>1.<code>r0 - r30</code> 31个通用整形寄存器，寄存器大小为64位。没有名为X31或W31的寄存器。 一些指令被编码了，以使数字31代表零寄存器ZR（WZR / XZR）。 还有一组受限制的指令，其中一个或多个参数被编码，以使数字31代表堆栈指针（SP）。
 2.<code>V0 - V31</code> 32个向量寄存器，也就是是浮点型寄存器，寄存器大小为128位。</p>
-
 <p>其中关于一些寄存器代表的信息中：x29就是FP, x30就是LR，这里会有人指出x31代表着SP寄存器上面也有解释，这只是个代号实际上并无x31寄存器。</p>
-
 <ul>
 <li>SP（Stack Pointer）栈顶寄存器，指向栈顶也就是低地址。在指令编码中，使用 SP/WSP来进行对SP寄存器的访问。</li>
 <li>FP（Frame pointer）栈底寄存器，指向栈底也就是高地址。</li>
@@ -409,17 +399,12 @@
 <li>CPSR (current program status register) 程序状态寄存器。cpsr在用户级编程时用于存储条件码；CPSR包含条件码标志，中断禁止位，当前处理器模式以及其他状态和控制信息。</li>
 <li>ESR/FAR 异常寄存器</li>
 </ul>
-
-<p><strong><em>一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。</em></strong></p>
-
-<p><strong><em>方法的返回值一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。</em></strong></p>
-
+<p><em><strong>一般来讲ARM64的机型 x0 – x7 分别会存放方法的前 8 个参数。如果是iOS的方法调用，x0、x1会分别保留隐藏参数self &amp; _cmd.如果参数个数超过了8个，多余的参数会存在栈上，新方法会通过栈来读取。</strong></em></p>
+<p><em><strong>方法的返回值一般都在 x0 上，如果方法返回值是一个较大的数据结构时，结果会存在 x8 执行的地址上。</strong></em></p>
 <blockquote>
 <p>关于详细的iOS函数调用时各寄存器的作用可见文章<a href="https://blog.cnbluebox.com/blog/2017/07/24/arm64-start/">iOS函数调用</a></p>
 </blockquote>
-
 <p>有了这些知识我们就可以通过crash时寄存器的值来获取更多的有用信息，crash的一次寄存器信息如下。</p>
-
 <pre><code>Thread 0 crashed with ARM 64 Thread State:
      x0:  0x000000013555e980    x1: 0x000000024582c242    x2: 0x000000012e270df0     x3: 0x0000000000000040
      x4:  0x000000012e270e40    x5: 000000000000000000    x6: 0x0000000000000062     x7: 0x00000000000001a0
@@ -459,12 +444,8 @@ Binary Images:
 0x220957000 - 0x2223b1fff  WebCore arm64e &lt;1763a71221433e1a8220577707d6f002&gt; /System/Library/PrivateFrameworks/WebCore.framework/WebCore
 0x21ddf8000 - 0x21deedfff  AVFAudio arm64e &lt;f68c9dba3bad38dfbf4a959b06253505&gt; /System/Library/Frameworks/AVFoundation.framework/Frameworks/AVFAudio.framework/AVFAudio
 0x21d86b000 - 0x21da8efff  CoreMotion arm64e &lt;457d54813e293412939c0799ab6e0658&gt; /System/Library/Frameworks/CoreMo
-</code></pre>
-
-<h2 id="dsym">DSYM</h2>
-
+</code></pre><h2 id="dsym">DSYM</h2>
 <p>知道了寄存器的值还不够，寄存器中如果存储基础类型可以直接读取，但寄存器一般存储的都是对象的地址，或是方法的地址。如何符号化。那么就要用到 DSYM（debug symbol） &amp; atos。这部分也可自行google使用。使用命令大致贴一下：</p>
-
 <pre><code>Binary Images:
 0x100fe4000 - 0x1061abfff  MainProject arm64 &lt;1f27f974e5bc3d709885c2a614886aba&gt; /private/var/containers/Bundle/Application/C1317DCE-EF83-4FB6-A722-B483B3951961/QQ.app/Frameworks/MainProject.framework/MainProject  //Crash APP 版本的UUID
 
@@ -473,31 +454,21 @@ dwarfdump --uuid Your.app.dSYM //DSYM的UUID
 
 atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/armv7 -l &lt;load-address&gt; &lt;address&gt;
 //翻译堆栈命令
-</code></pre>
-
-<p>上述只能符号化非系统的代码段地址，系统库地址的符号化要通过对应系统版本和架构的符号表得出。</p>
-
+</code></pre><p>上述只能符号化非系统的代码段地址，系统库地址的符号化要通过对应系统版本和架构的符号表得出。</p>
 <h2 id="尾调优化">尾调优化</h2>
-
 <p>crash的堆栈有时并不像实际代码调用情况，这其中一个原因是尾调优化（其他原因暂未找到请各位赐教）。尾调优化内容可以参考：
 <a href="http://www.ruanyifeng.com/blog/2015/04/tail-call.html">尾调优化</a></p>
-
 <p>尾调用优化的本质就是栈帧的复用。
 函数调用的过程：函数调用会在内存中申请一块“栈帧”，保存调用的地址和内部变量等信息。如果函数A内部调用函数B，那么在函数A的栈帧上就会加上一个函数B的栈帧。
 如果函数B再调用了函数C，那么函数A的栈帧上就会有序加上函数B和函数C的栈帧。如果C运行结束了，返回到函数B，C的栈帧才会消失。</p>
-
 <p>尾调用优化的条件有三点：</p>
-
 <ul>
 <li>尾调用函数不需要访问当前栈帧中的变量。（变量是形参可以，变量是实参不行）</li>
 <li>尾调用返回后，函数没有语句需要执行。（最后一步仅仅只能执行一个函数）</li>
 <li>尾调用结果就是函数的返回值。（不能有别的“附加品”，最后一步仅仅只能是执行一个函数）</li>
 </ul>
-
 <h2 id="实战分析">实战分析</h2>
-
-<h3 id="1-现网出现crash堆栈如下">1.现网出现crash堆栈如下</h3>
-
+<h3 id="1现网出现crash堆栈如下">1.现网出现crash堆栈如下</h3>
 <pre><code>0 libobjc.A.dylib 0x00000001cee7f6b0 objc_msgSend + 16
 1 Foundation 0x00000001d06db110 ___57-[NSNotificationCenter addObserver:selector:name:object:]_block_invoke_2 + 16
 2 CoreFoundation 0x00000001cfbd11d0 ___CFNOTIFICATIONCENTER_IS_CALLING_OUT_TO_AN_OBSERVER__ + 16
@@ -508,33 +479,25 @@ atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/ar
 7 CoreFoundation 0x00000001cfbcfd70 _CFXNotificationPost + 712
 8 Foundation 0x00000001d05cc6b0 -[NSNotificationCenter postNotificationName:object:userInfo:] + 68
 9 MainProject 0x0000000107011eb0 -[QQThemeManager reloadCustUIAppearance:] (QQThemeManager.mm:1060)
-</code></pre>
-
-<p>主题切换时发送通知到业务，业务方本应释放的对象接到了通知，也就是野指针。主题通知全业务都会接收到一搜索大概有30处左右的通知，一个个排查不现实，需要定位到具体调用方。</p>
-
-<h3 id="2-寄存器分析">2.寄存器分析</h3>
-
+</code></pre><p>主题切换时发送通知到业务，业务方本应释放的对象接到了通知，也就是野指针。主题通知全业务都会接收到一搜索大概有30处左右的通知，一个个排查不现实，需要定位到具体调用方。</p>
+<h3 id="2寄存器分析">2.寄存器分析</h3>
 <p>1.结合上述寄存器所代表的信息，分析出x1对应的crash方法，经过系统符号化得到方法 setBackgroundColor: 与 x-dectect 检测的方法一致，说明堆栈和寄存器信息正确。</p>
-
 <p>2.LR代码栈帧调用的返回地址，也就是可以定位到在哪个方法里面调用了 setBackgroundColor 方法，通过对应APP版本的DSYM分析出是登录业务的 handleThemeChange: 方法。</p>
-
-<p>3.分析业务代码，文件使用MRC内存管理，已有极大可能出现问题。分析几个全局视图变量很容易发现对象的使用不当之处。</p>
-
-<pre><code>_accountCollectionHeader = [self headerViewForTitle:@&quot;切换帐号&quot;];  //retainCount 0
-[self addSubView:_accountCollectionHeader];	//retainCount 1
-
-
-- (UIView*)headerViewForTitle:(NSString*)title{
-​    UIImageView* headerView = CZ_NewUIImageViewWithFrame(CGRectMake(0, 0,self.width, Acccount_Header_Height));
-​    return [headerView autorelease]; //自动对retainCount-1，所以返回对象不持有
-} 
-</code></pre>
-
-<p>如上初始化 _accountCollectionHeader 使用的autoRelease方法，对象并没有真正被self持有，一旦该对象被superView remove，在次访问会马上Crash。秉着谁创建谁持有的特点，这里应该在创建时 <code>[[self headerViewForTitle:@&quot;切换帐号&quot;] retain]</code> 保证对象的持有关系，在对象dealloc的时候进行  <code>[_accountCollectionHeader release];</code> .</p>
-
-<blockquote>
-<p>Crash是衡量一个APP质量的关键指标，也会影响到用户的体验和用户量留存。如何解Crash只是一个技术手段我们可以通过简单学习就把线上的crash解决。可是到了这一步说明已经对用户产生了伤害，所以如何在代码水平参差不齐的项目中避免Crash才应当是更需重视的问题。这更凸显了CI-静态检测和线上Crash兜底组件的重要性。</p>
-</blockquote>
+<p>3.分析业务代码，文件使用MRC内存管理，嗯~真香。分析几个全局变量很简单就发现了，对象的使用不当之处。初始化变量使用的autoRelease方法，对象并没有真正被self持有，一旦被使用完这个对象就彻底被释放了，在访问也会马上Crash。</p>
+<h2 id="字节小感">字节小感</h2>
+<p>目前bit和byte的比较
+bit:</p>
+<p>计算机中的最小存储单元
+存储内容总是0或1
+所有二进制状态的实体都可以使用1bit表示
+8bits组成1byte
+不能够单独寻址
+byte：</p>
+<p>1byte包含8bits
+可以存储所有ASCII所有字符（这是它包含8bits的初衷）
+十进制整数范围[-128,127]或[0, 255]
+最小的可寻址存储单元。</p>
+<p>iOS最小内存分配16B。</p>
 
     </div>
 
@@ -621,6 +584,8 @@ atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/ar
   
 
     
+
+  
 
         </div>
       </div>
@@ -710,7 +675,9 @@ atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/ar
 
   <span class="copyright-year">
     &copy;
-    2019
+    
+      2019 -
+    2020
     <span class="heart">
       
       <i class="iconfont">
@@ -755,6 +722,12 @@ atos -o yourAppName.app.dSYM/Contents/Resources/DWARF/yourAppName -arch arm64/ar
 
 
 <script type="text/javascript" src="/js/main.638251f4230630f0335d8c6748e53a96f94b72670920b60c09a56fdc8bece214.js" integrity="sha256-Y4JR9CMGMPAzXYxnSOU6lvlLcmcJILYMCaVv3Ivs4hQ=" crossorigin="anonymous"></script>
+
+
+
+
+
+
 
 
 
