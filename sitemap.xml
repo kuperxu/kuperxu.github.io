@@ -24,21 +24,35 @@
   
   <url>
     <loc>https://kuperxu.github.io/categories/</loc>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://kuperxu.github.io/tags/crash/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://kuperxu.github.io/categories/docs/</loc>
+    <loc>https://kuperxu.github.io/categories/crash/</loc>
     <lastmod>2018-03-05T16:01:23+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://kuperxu.github.io/tags/ios/</loc>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
     <loc>https://kuperxu.github.io/categories/ios/</loc>
-    <lastmod>2018-03-05T16:01:23+08:00</lastmod>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -51,15 +65,8 @@
   </url>
   
   <url>
-    <loc>https://kuperxu.github.io/tags/tag-6/</loc>
-    <lastmod>2018-03-05T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
     <loc>https://kuperxu.github.io/tags/</loc>
-    <lastmod>2018-03-05T16:01:23+08:00</lastmod>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -72,50 +79,15 @@
   </url>
   
   <url>
-    <loc>https://kuperxu.github.io/tags/image/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
+    <loc>https://kuperxu.github.io/tags/render/</loc>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>https://kuperxu.github.io/post/image-preview/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/categories/index/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/preview/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/shortcodes/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/categories/shortcodes/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/tag-7/</loc>
-    <lastmod>2018-03-04T16:01:23+08:00</lastmod>
+    <loc>https://kuperxu.github.io/categories/render/</loc>
+    <lastmod>2019-08-18T15:03:19+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -123,76 +95,6 @@
   <url>
     <loc>https://kuperxu.github.io/</loc>
     <lastmod>2019-08-18T21:41:52+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/post/creating-a-new-theme/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/categories/development/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/development/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/go/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/golang/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/categories/golang/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/templates/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/themes/</loc>
-    <lastmod>2014-09-28T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/post/hugoisforlovers/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  
-  <url>
-    <loc>https://kuperxu.github.io/tags/hugo/</loc>
-    <lastmod>2014-04-02T00:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>render on BATTLE - kuper&#39;s blog</title>
+    <link>https://kuperxu.github.io/tags/render/</link>
+    <description>Recent content in render on BATTLE - kuper&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 18 Aug 2019 15:03:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://kuperxu.github.io/tags/render/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>iOS图片渲染</title>
+      <link>https://kuperxu.github.io/post/ios-render-process/</link>
+      <pubDate>Sun, 18 Aug 2019 15:03:19 +0800</pubDate>
+      
+      <guid>https://kuperxu.github.io/post/ios-render-process/</guid>
+      <description>渲染图片到屏幕上 每一个像素点均由三个颜色组件构成:红，蓝，绿外加一个透明度。在每个苹果产品上都有上百万个像素点需要绘制，并且需要一个稳定的F</description>
+    </item>
+    
+  </channel>
+</rss>
